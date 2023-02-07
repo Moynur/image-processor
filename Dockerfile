@@ -1,11 +1,22 @@
-# Dockerfile
-FROM python:3.11.1
+# Use an Alpine base image
+FROM python:3.11-alpine
 
-WORKDIR /image-processor
+# Set the working directory
+WORKDIR /app
 
+# Copy the requirements file
 COPY requirements.txt .
-RUN pip install -r requirements.txt
 
-COPY main.py .
+# Install the necessary dependencies
+RUN apk add --no-cache build-base && \
+    apk add --no-cache --virtual .build-deps \
+        python3-dev && \
+    pip install -r requirements.txt && \
+    apk del .build-deps 
+RUN apk add tesseract-ocr
 
-CMD ["python", "main.py"]
+# Copy the application files
+COPY . .
+
+# Set the default command to run the app
+CMD ["python","-u","app.py"]
