@@ -1,5 +1,11 @@
+# Dockerfile
 FROM python:3.11.1
-# Or any preferred Python version.
-COPY . .
+
+WORKDIR /image-processor
+
+COPY requirements.txt .
 RUN pip install -r requirements.txt
-CMD [“python”, “./main.py”] 
+
+COPY main.py .
+
+CMD ["python", "main.py"]
